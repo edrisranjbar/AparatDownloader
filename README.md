@@ -10,6 +10,9 @@ name of the files will be the Title of the URL that you given.
 - [x] selenium
 - [x] wget
 
-# How to contribute?
+## How to contribute?
+
+## TO-DO
+- [ ] Download all videos in a playlist
 
 *Thank You!*
