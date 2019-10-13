@@ -20,4 +20,4 @@ for url in urls:
     DownloadLink = browser.find_elements_by_css_selector(".dropdown .dropdown-content .menu-wrapper .menu-list .menu-item-link a")[4]
     DownloadLink = DownloadLink.get_attribute("href")
     DownloadStatus = wget.download(DownloadLink,currentFolder+"/"+title+".mp4")
-    browser.close()
+browser.close()
