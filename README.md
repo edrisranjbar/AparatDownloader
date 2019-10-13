@@ -9,6 +9,7 @@ name of the files will be the Title of the URL that you given.
 ### Requirements
 - [x] selenium
 - [x] wget
+- [x] os
 
 ## How to contribute?
 
