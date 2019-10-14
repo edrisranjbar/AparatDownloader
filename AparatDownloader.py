@@ -31,11 +31,11 @@ def downloadWithUrl(url):
             # Download the video with the name of page
             wget.download(DownloadLink,currentFolder+"/"+title+".mp4")
         except:
-            print("\n Something went wrong")
-            return
+            print("\n Download link was not found")
+            return False
     except:
         print("\n URL is invalid or no internet")
-        return
+        return False
     return True
 
 
