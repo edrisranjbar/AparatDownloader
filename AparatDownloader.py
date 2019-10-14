@@ -10,10 +10,10 @@ count = 0
 # Getting URLs
 def getUrl():
     message ="Give me the URL: (N for exit getting URL)"
-    # If it is a NO or something like this
-    if len(message) < 5:
-        return input(message).lower()
-    return input(message)
+    userUrl = input(message)
+    if userUrl!="n" and userUrl!="no":
+        urls.append(userUrl)
+        getUrl()
 
 # Download Based on URL
 def downloadWithUrl(url):
@@ -39,16 +39,14 @@ def downloadWithUrl(url):
     return True
 
 
-userUrl = getUrl()
-while userUrl!="n" and userUrl != "no":
-    urls.append(userUrl)
-    userUrl = getUrl()
-
 browser = webdriver.Chrome(executable_path="{0}/chromedriver".format(currentFolder))
+getUrl()
+
 for url in urls:
     status = downloadWithUrl(url)
     if status:
         count += 1
+
 browser.close()
 print("---------------------------------")
 print("Count of downloaded videos: " + str(count))
