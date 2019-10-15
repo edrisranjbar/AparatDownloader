@@ -7,14 +7,30 @@ currentFolder = os.getcwd()
 urls = []
 count = 0
 
+# URL Validation
+def isValid(url):
+    if "https://www.aparat.com/" in url:
+        return True
+    else:
+        return False
+
+
 # Getting URLs
 def getUrl():
-    message ="Give me the URL: (N for exit getting URL)"
+    message ="Give me the URL: (N or NO for exit getting URL)"
     userUrl = input(message)
-    if userUrl!="n" and userUrl!="no":
-        urls.append(userUrl)
-        getUrl()
+    if len(userUrl) > 2:
+        if isValid(userUrl):
+            urls.append(userUrl)
+            getUrl()
+        else:
+            print("URL is invalid!")
+    else:
+        userUrl.lower()
+        if userUrl == "n" or userUrl == "no":
+            return
 
+        
 # Download Based on URL
 def downloadWithUrl(url):
     try:
