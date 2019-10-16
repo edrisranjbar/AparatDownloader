@@ -5,6 +5,9 @@ This script can Download multi vidoes. You gives the script, URLS; and it will b
 name of the files will be the Title of the URL that you given.
 
 ## How to install?
+1. ```git clone https://github.com/edrisranjbar/AparatDownloader.git```
+2. ```cd AparatDownloader```
+3. ```python3 AparatDownloader.py```
 
 ### Requirements
 - [x] selenium
