@@ -13,7 +13,4 @@ name of the files will be the Title of the URL that you given.
 
 ## How to contribute?
 
-## TO-DO
-- [ ] Download all videos in a playlist
-
 *Thank You!*
