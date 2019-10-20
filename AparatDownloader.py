@@ -3,6 +3,7 @@ from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
 import wget
 import os
+from tkinter import *
 
 
 class AparatDownloader():
@@ -11,18 +12,15 @@ class AparatDownloader():
         self.url = ""
         self.count = 0
         self.videoLinks = []
+        self.errors = ""
 
     def isValid(self, url):
         if "https://www.aparat.com/" in url:
+            self.errors = ""
             return True
         else:
-            print("URL is invalid!")
-            self.getUrl()
-
-    def getUrl(self):
-        userUrl = input("Give me the URL: ")
-        if self.isValid(userUrl):
-            self.url = userUrl
+            self.errors = "URL is invalid!"
+            return False
 
     def downloadWithUrl(self, url):
         try:
@@ -42,10 +40,10 @@ class AparatDownloader():
                 wget.download(DownloadLink, self.currentFolder +
                               "/"+title+".mp4")
             except:
-                print("\n Download link was not found")
+                self.errors = "\n Download link was not found"
                 return False
         except:
-            print("\n URL is invalid or no internet")
+            self.errors = "\n URL is invalid or no internet"
             return False
         return True
 
@@ -61,14 +59,35 @@ class AparatDownloader():
             self.count += 1
 
 
+# Inititalizing UI
+root = Tk()
+root.resizable(FALSE, FALSE)
+root.minsize(250, 250)
+root.title("Aparat Downloader")
+lblErrors = Label(root, text="")
+lblErrors.pack()
+Label(root, text="Type URL:").pack()
+txtUrl = Entry(root)
+txtUrl.pack()
+lblCount = Label(root, text="Count of downloaded videos:")
+lblCount.pack()
+
+
+def download():
+    if downloader.isValid(txtUrl.get()):
+        downloader.downloadFromPlayList(txtUrl.get())
+        lblCount['text'] = "Count of downloaded videos:" + \
+            str(downloader.count)
+    print(downloader.errors)
+    lblErrors['text'] = downloader.errors
+
+
 downloader = AparatDownloader()
 
 browser = webdriver.Chrome(
     executable_path="{0}/chromedriver".format(downloader.currentFolder))
 
-downloader.getUrl()
-downloader.downloadFromPlayList(downloader.url)
+Button(root, text="Download", command=download).pack()
 
+root.mainloop()
 browser.close()
-print("---------------------------------")
-print("Count of downloaded videos: " + str(downloader.count))
