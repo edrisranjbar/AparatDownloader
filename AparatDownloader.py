@@ -1,5 +1,7 @@
 # Import libraries
 from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
 import wget
 import os
@@ -84,8 +86,8 @@ def download():
 
 downloader = AparatDownloader()
 
-browser = webdriver.Chrome(
-    executable_path="{0}/chromedriver".format(downloader.currentFolder))
+browser = webdriver.Chrome(service=Service(ChromeDriverManager().install())
+                           )
 
 Button(root, text="Download", command=download).pack()
 
