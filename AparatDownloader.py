@@ -1,11 +1,13 @@
 # Import libraries
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.common.keys import Keys
 import wget
 import os
 from tkinter import *
+from time import sleep
 
 
 class AparatDownloader():
@@ -27,16 +29,18 @@ class AparatDownloader():
     def downloadWithUrl(self, url):
         try:
             browser.get(url)
+            sleep(6)
             title = browser.title
             try:
                 # Download button
-                browser.find_element_by_xpath(
-                    "/html/body/main/div[1]/div/div/div/div/section[2]/div/div[2]/div[2]/div[2]/div[1]/div[1]/div/button").click()
+                browser.find_element(By.CSS_SELECTOR,
+                                     "#primary > div.single-details > div.single-details__info > div.single-details__utils > div > div > div.download-button > div > div > button").click()
 
                 # Get Download link with 720p
-                DownloadLink = browser.find_elements_by_css_selector(
-                    ".dropdown .dropdown-content .menu-wrapper .menu-list .menu-item-link a")[4]
-                DownloadLink = DownloadLink.get_attribute("href")
+                DownloadLink = browser.find_element(By.XPATH,
+                                                    "//*[@id='720p']/div/span/span").click()
+                sleep(3)
+                DownloadLink = browser.current_url
 
                 # Download the video with the name of page
                 wget.download(DownloadLink, self.currentFolder +
@@ -51,8 +55,9 @@ class AparatDownloader():
 
     def downloadFromPlayList(self, url):
         browser.get(url)
-        links = browser.find_elements_by_css_selector(
-            ".playlist-body .thumb-title a")
+        sleep(10)
+        links = browser.find_elements(By.CSS_SELECTOR,
+                                      "a.titled-link.title[data-refer=playlists]")
         for link in links:
             self.videoLinks.append(link.get_attribute("href"))
 
@@ -86,7 +91,9 @@ def download():
 
 downloader = AparatDownloader()
 
-browser = webdriver.Chrome(service=Service(ChromeDriverManager().install())
+options = webdriver.ChromeOptions()
+options.add_experimental_option("excludeSwitches", ["enable-logging"])
+browser = webdriver.Chrome(options=options, service=Service(ChromeDriverManager().install())
                            )
 
 Button(root, text="Download", command=download).pack()
