@@ -17,7 +17,10 @@ class Scrapper():
         self.options.add_experimental_option(
             "excludeSwitches", ["enable-logging"])
         self.options.add_argument('headless')
-        self.browser = webdriver.Chrome(options=self.options, service=Service(ChromeDriverManager().install())
+        self.browser = webdriver.Chrome(options=self.options,
+                                        service=Service(
+                                            ChromeDriverManager().install()
+                                        )
                                         )
 
     def isUrlValid(self, url):
@@ -38,14 +41,14 @@ class Scrapper():
                 self.browser.find_element(By.CSS_SELECTOR,
                                           "#primary > div.single-details > div.single-details__info > div.single-details__utils > div > div > div.download-button > div > div > button").click()
 
-                # Get Download link with 720p
+                # Download link with 720p
                 DownloadLink = self.browser.find_element(By.XPATH,
                                                          "//*[@id='720p']/div/span/span").click()
                 sleep(3)
                 self.browser.switch_to.window(self.browser.window_handles[-1])
                 DownloadLink = self.browser.current_url
 
-                # Download the video with the name of page
+                # Download the actual video
                 wget.download(DownloadLink, self.currentFolder +
                               "/"+title+".mp4")
             except Exception as error:
