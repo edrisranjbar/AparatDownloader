@@ -2,16 +2,14 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
-from selenium.webdriver.common.keys import Keys
 import wget
-import os
 
 from time import sleep
 
 
 class Scrapper():
-    def __init__(self):
-        self.currentFolder = os.getcwd()
+    def __init__(self, currentFolder):
+        self.currentFolder = currentFolder
         self.url = ""
         self.count = 0
         self.videoLinks = []
@@ -23,7 +21,7 @@ class Scrapper():
         self.browser = webdriver.Chrome(options=self.options, service=Service(ChromeDriverManager().install())
                                         )
 
-    def isValid(self, url):
+    def isUrlValid(self, url):
         if "https://www.aparat.com/" in url:
             self.errors = ""
             return True
@@ -31,7 +29,7 @@ class Scrapper():
             self.errors = "URL is invalid!"
             return False
 
-    def downloadWithUrl(self, url):
+    def downloadSingleVideo(self, url):
         try:
             self.browser.get(url)
             sleep(6)
@@ -61,14 +59,17 @@ class Scrapper():
             self.browser.close()
         return True
 
-    def downloadFromPlayList(self, url):
+    def getPlaylistVideoLinks(self, url):
         self.browser.get(url)
         sleep(10)
         links = self.browser.find_elements(By.CSS_SELECTOR,
                                            "a.titled-link.title[data-refer=playlists]")
+
+    def downloadPlaylistVideos(self, url):
+        links = self.getPlaylistVideoLinks(url)
         for link in links:
             self.videoLinks.append(link.get_attribute("href"))
 
         for link in self.videoLinks:
-            self.downloadWithUrl(link)
+            self.downloadSingleVideo(link)
             self.count += 1

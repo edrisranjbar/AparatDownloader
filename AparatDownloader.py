@@ -1,12 +1,13 @@
 from tkinter import *
+import os
 from scrapper import Scrapper
 
-downloader = Scrapper()
+downloader = Scrapper(os.getcwd())
 
 
 def download():
-    if downloader.isValid(txtUrl.get()):
-        downloader.downloadFromPlayList(txtUrl.get())
+    if downloader.isUrlValid(txtUrl.get()):
+        downloader.downloadPlaylistVideos(txtUrl.get())
         lblCount['text'] = "Count of downloaded videos:" + \
             str(downloader.count)
     print(downloader.errors)
