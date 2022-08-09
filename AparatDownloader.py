@@ -40,6 +40,7 @@ class AparatDownloader():
                 DownloadLink = browser.find_element(By.XPATH,
                                                     "//*[@id='720p']/div/span/span").click()
                 sleep(3)
+                browser.switch_to.window(browser.window_handles[-1])
                 DownloadLink = browser.current_url
 
                 # Download the video with the name of page
@@ -93,6 +94,7 @@ downloader = AparatDownloader()
 
 options = webdriver.ChromeOptions()
 options.add_experimental_option("excludeSwitches", ["enable-logging"])
+options.add_argument('headless')
 browser = webdriver.Chrome(options=options, service=Service(ChromeDriverManager().install())
                            )
 
