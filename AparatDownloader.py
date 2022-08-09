@@ -1,17 +1,19 @@
 from tkinter import *
-import os
+from os import getcwd
 from scrapper import Scrapper
 
-downloader = Scrapper(os.getcwd())
+downloader = Scrapper(getcwd())
 
 
 def download():
-    if downloader.isUrlValid(txtUrl.get()):
-        downloader.downloadPlaylistVideos(txtUrl.get())
-        lblCount['text'] = "Count of downloaded videos:" + \
+    url = txtUrl.get()
+    if downloader.isUrlValid(url):
+        downloader.downloadPlaylistVideos(url)
+        lblCount['text'] = "Count of downloaded videos: " + \
             str(downloader.count)
-    print(downloader.errors)
-    lblErrors['text'] = downloader.errors
+    else:
+        print(downloader.errors)
+        lblErrors['text'] = downloader.errors
 
 
 # Inititalizing UI

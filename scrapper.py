@@ -10,7 +10,6 @@ from time import sleep
 class Scrapper():
     def __init__(self, currentFolder):
         self.currentFolder = currentFolder
-        self.url = ""
         self.count = 0
         self.videoLinks = []
         self.errors = ""
@@ -49,11 +48,11 @@ class Scrapper():
                 # Download the video with the name of page
                 wget.download(DownloadLink, self.currentFolder +
                               "/"+title+".mp4")
-            except:
-                self.errors = "\n Download link was not found"
+            except Exception as error:
+                self.errors = f"\nDownload link was not found\n {error}"
                 return False
-        except:
-            self.errors = "\n URL is invalid or no internet"
+        except Exception as error:
+            self.errors = f"\nURL is invalid or no internet\n {error}"
             return False
         finally:
             self.browser.close()
@@ -64,12 +63,11 @@ class Scrapper():
         sleep(10)
         links = self.browser.find_elements(By.CSS_SELECTOR,
                                            "a.titled-link.title[data-refer=playlists]")
-
-    def downloadPlaylistVideos(self, url):
-        links = self.getPlaylistVideoLinks(url)
         for link in links:
             self.videoLinks.append(link.get_attribute("href"))
 
+    def downloadPlaylistVideos(self, url):
+        self.getPlaylistVideoLinks(url)
         for link in self.videoLinks:
             self.downloadSingleVideo(link)
             self.count += 1
