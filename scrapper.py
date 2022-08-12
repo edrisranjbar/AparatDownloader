@@ -3,13 +3,13 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
 import wget
-
 from time import sleep
+from os import getcwd
 
 
 class Scrapper():
-    def __init__(self, currentFolder):
-        self.currentFolder = currentFolder
+    def __init__(self):
+        self.currentFolder = getcwd()
         self.count = 0
         self.videoLinks = []
         self.errors = ""
@@ -24,18 +24,18 @@ class Scrapper():
                                         )
 
     def isUrlValid(self, url):
-        if "https://www.aparat.com/" in url:
+        if "aparat.com/" in url:
             self.errors = ""
             return True
         else:
             self.errors = "URL is invalid!"
             return False
 
-    def downloadSingleVideo(self, url):
+    def getASingleVideoDownloadLink(self, url):
         try:
             self.browser.get(url)
             sleep(6)
-            title = self.browser.title
+            self.title = self.browser.title
             try:
                 # Download button
                 self.browser.find_element(By.CSS_SELECTOR,
@@ -46,20 +46,19 @@ class Scrapper():
                                                          "//*[@id='720p']/div/span/span").click()
                 sleep(3)
                 self.browser.switch_to.window(self.browser.window_handles[-1])
-                DownloadLink = self.browser.current_url
-
-                # Download the actual video
-                wget.download(DownloadLink, self.currentFolder +
-                              "/"+title+".mp4")
+                return self.browser.current_url
             except Exception as error:
                 self.errors = f"\nDownload link was not found\n {error}"
-                return False
+                return ""
+            finally:
+                self.browser.close()
         except Exception as error:
             self.errors = f"\nURL is invalid or no internet\n {error}"
-            return False
-        finally:
-            self.browser.close()
-        return True
+            return ""
+
+    def downloadSingleVideo(self, DownloadLink):
+        wget.download(DownloadLink, self.currentFolder +
+                      "/"+self.title+".mp4")
 
     def getPlaylistVideoLinks(self, url):
         self.browser.get(url)
@@ -72,5 +71,6 @@ class Scrapper():
     def downloadPlaylistVideos(self, url):
         self.getPlaylistVideoLinks(url)
         for link in self.videoLinks:
-            self.downloadSingleVideo(link)
+            downloadLink = self.getASingleVideoDownloadLink(link)
+            self.downloadSingleVideo(downloadLink)
             self.count += 1

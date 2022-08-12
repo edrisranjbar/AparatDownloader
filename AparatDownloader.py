@@ -1,8 +1,7 @@
 from tkinter import *
-from os import getcwd
 from scrapper import Scrapper
 
-downloader = Scrapper(getcwd())
+downloader = Scrapper()
 
 
 def download():
