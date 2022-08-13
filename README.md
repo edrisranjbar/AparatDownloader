@@ -22,6 +22,7 @@ name of the files will be the Title of the URL that you given.
 you should install following packages (use steps above)
 
 - [x] selenium
+- [x] webdriver_manager
 - [x] wget
 - [x] os
 - [x] tkinter
