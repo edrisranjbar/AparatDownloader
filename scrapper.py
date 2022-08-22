@@ -34,7 +34,7 @@ class Scrapper():
     def getASingleVideoDownloadLink(self, url):
         try:
             self.browser.get(url)
-            sleep(6)
+            sleep(10)
             self.title = self.browser.title
             try:
                 # Download button
@@ -49,12 +49,12 @@ class Scrapper():
                 return self.browser.current_url
             except Exception as error:
                 self.errors = f"\nDownload link was not found\n {error}"
-                return ""
+                return self.errors
             finally:
                 self.browser.close()
         except Exception as error:
             self.errors = f"\nURL is invalid or no internet\n {error}"
-            return ""
+            return self.errors
 
     def downloadSingleVideo(self, DownloadLink):
         wget.download(DownloadLink, self.currentFolder +

@@ -1,12 +1,11 @@
 import sys
 import unittest
-
 from scrapper import *
-import unittest
 
 
 class ScrapperTest(unittest.TestCase):
     def setUp(self):
+        super().setUp()
         self.downloader = Scrapper()
 
     def testThatAllRequirementsSatisfied(self):
@@ -22,6 +21,8 @@ class ScrapperTest(unittest.TestCase):
         invalidUrls = [
             "https://www.google.com/",
             "aparat.co/v/4Z9Zb",
+            # "edrisranjbar.ir/www.aparat.com/",
+            # "https://www.edrisranjbar.ir/index.php?www.aparat.com/",
         ]
         for url in validUrls:
             self.assertTrue(self.downloader.isUrlValid(url))
