@@ -23,3 +23,4 @@ urllib3==1.26.11
 webdriver-manager==3.8.3
 wget==3.2
 wsproto==1.1.0
+unittest2
