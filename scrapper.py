@@ -1,3 +1,4 @@
+from xmlrpc.client import Boolean
 from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
@@ -23,6 +24,12 @@ class Scrapper():
                                         )
                                         )
 
+    def isAPlayList(self, url) -> Boolean:
+        selector = "single-playlist"
+        self.browser.get(url)
+        sleep(30)
+        return len(self.browser.find_elements(By.CLASS_NAME, selector)) > 0
+
     def isUrlValid(self, url):
         if "aparat.com/" in url:
             self.errors = ""
@@ -35,7 +42,7 @@ class Scrapper():
         if (self.isUrlValid(url) is False):
             raise Exception("URL is invalid") from None
         self.browser.get(url)
-        sleep(20)
+        sleep(30)
         self.title = self.browser.title
         try:
             # Download button
@@ -63,10 +70,9 @@ class Scrapper():
 
     def getPlaylistVideoLinks(self, url):
         self.browser.get(url)
-        sleep(20)
+        sleep(30)
         links = self.browser.find_elements(By.CSS_SELECTOR,
                                            "a.titled-link.title[data-refer=playlists]")
-        print("\n", links, "\n")
         for link in links:
             self.videoLinks.append(link.get_attribute("href"))
         return self.videoLinks
