@@ -1,3 +1,4 @@
+import os
 import sys
 import unittest
 from scrapper import *
@@ -7,6 +8,13 @@ class ScrapperTest(unittest.TestCase):
     def setUp(self):
         super().setUp()
         self.downloader = Scrapper()
+
+    def tearDown(self) -> None:
+        super().tearDown()
+        # remove all .mp4 files here
+        for file in os.listdir():
+            if file.endswith(".mp4"):
+                os.remove(file)
 
     def testThatAllRequirementsSatisfied(self):
         if sys.modules.get('wget') is None or sys.modules.get('selenium') is None \
@@ -31,7 +39,7 @@ class ScrapperTest(unittest.TestCase):
 
     def testThatWeCanGetDownloadLinkOfASingleVideo(self):
         url = "https://www.aparat.com/v/6hSwx"
-        downloadLink = self.downloader.getASingleVideoDownloadLink(url)
+        downloadLink = self.downloader.getASingleVideoDownloadLink(url, '720')
         self.assertTrue(
             "https://" in downloadLink
         )
@@ -66,3 +74,12 @@ class ScrapperTest(unittest.TestCase):
         isAPlayList = self.downloader.isAPlayList(
             "https://www.aparat.com/v/GojkW")
         self.assertTrue(isAPlayList)
+
+    def testThatWeCanGetDifferentQualitiesLink(self):
+        # we expect to get all 6 video qualities for this video
+        url = "https://www.aparat.com/v/6hSwx"
+        fetched_qualities = self.downloader.getVideoQualitiesLink(url)
+        original_qualities = ["1080", "720", "480", "360", "240", "144"]
+        for quality in original_qualities:
+            if quality not in fetched_qualities:
+                self.fail(f"{quality} not found!")

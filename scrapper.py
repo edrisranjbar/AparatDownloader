@@ -1,5 +1,6 @@
 from xmlrpc.client import Boolean
 from selenium import webdriver
+from selenium. webdriver. common. keys import Keys
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from webdriver_manager.chrome import ChromeDriverManager
@@ -11,6 +12,14 @@ from os import getcwd
 class Scrapper():
     def __init__(self):
         self.currentFolder = getcwd()
+        self.quality_selectors = {
+            "1080": "//*[@id='1080p']/div/span/span",
+            "720": "//*[@id='720p']/div/span/span",
+            "480": "//*[@id='480p']/div/span/span",
+            "360": "//*[@id='360p']/div/span/span",
+            "240": "//*[@id='240p']/div/span/span",
+            "144": "//*[@id='144p']/div/span/span",
+        }
         self.count = 0
         self.videoLinks = []
         self.errors = ""
@@ -38,7 +47,7 @@ class Scrapper():
             self.errors = "URL is invalid!"
             return False
 
-    def getASingleVideoDownloadLink(self, url):
+    def getASingleVideoDownloadLink(self, url, quality='720'):
         if (self.isUrlValid(url) is False):
             raise Exception("URL is invalid") from None
         self.browser.get(url)
@@ -51,7 +60,7 @@ class Scrapper():
 
             # Download link with 720p
             self.browser.find_element(
-                By.XPATH, "//*[@id='720p']/div/span/span").click()
+                By.XPATH, self.quality_selectors[quality]).click()
             sleep(5)
             self.browser.switch_to.window(self.browser.window_handles[-1])
             return self.browser.current_url
@@ -83,3 +92,15 @@ class Scrapper():
             downloadLink = self.getASingleVideoDownloadLink(link)
             self.downloadSingleVideo(downloadLink)
             self.count += 1
+
+    def getVideoQualitiesLink(self, url):
+        found_qualities = []
+        self.browser.get(url)
+        sleep(20)
+        # Download button
+        self.browser.find_element(By.CSS_SELECTOR,
+                                  "#primary > div.single-details > div.single-details__info > div.single-details__utils > div > div > div.download-button > div > div > button").click()
+        for quality in self.quality_selectors:
+            if self.browser.find_element(By.XPATH, self.quality_selectors[quality]).is_displayed():
+                found_qualities.append(quality)
+        return found_qualities
