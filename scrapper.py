@@ -32,29 +32,27 @@ class Scrapper():
             return False
 
     def getASingleVideoDownloadLink(self, url):
+        if (self.isUrlValid(url) is False):
+            raise Exception("URL is invalid") from None
+        self.browser.get(url)
+        sleep(10)
+        self.title = self.browser.title
         try:
-            self.browser.get(url)
-            sleep(10)
-            self.title = self.browser.title
-            try:
-                # Download button
-                self.browser.find_element(By.CSS_SELECTOR,
-                                          "#primary > div.single-details > div.single-details__info > div.single-details__utils > div > div > div.download-button > div > div > button").click()
+            # Download button
+            self.browser.find_element(By.CSS_SELECTOR,
+                                      "#primary > div.single-details > div.single-details__info > div.single-details__utils > div > div > div.download-button > div > div > button").click()
 
-                # Download link with 720p
-                DownloadLink = self.browser.find_element(By.XPATH,
-                                                         "//*[@id='720p']/div/span/span").click()
-                sleep(3)
-                self.browser.switch_to.window(self.browser.window_handles[-1])
-                return self.browser.current_url
-            except Exception as error:
-                self.errors = f"\nDownload link was not found\n {error}"
-                return self.errors
-            finally:
-                self.browser.close()
-        except Exception as error:
-            self.errors = f"\nURL is invalid or no internet\n {error}"
-            return self.errors
+            # Download link with 720p
+            self.browser.find_element(
+                By.XPATH, "//*[@id='720p']/div/span/span").click()
+            sleep(5)
+            self.browser.switch_to.window(self.browser.window_handles[-1])
+            return self.browser.current_url
+        except Exception as error1:
+            self.errors = f"\nDownload link was not found\n {error1}"
+            raise Exception("Download link was not found") from None
+        finally:
+            self.browser.close()
 
     def downloadSingleVideo(self, DownloadLink):
         wget.download(DownloadLink, self.currentFolder +
