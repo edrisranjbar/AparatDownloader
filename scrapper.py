@@ -35,7 +35,7 @@ class Scrapper():
         if (self.isUrlValid(url) is False):
             raise Exception("URL is invalid") from None
         self.browser.get(url)
-        sleep(10)
+        sleep(20)
         self.title = self.browser.title
         try:
             # Download button
@@ -50,21 +50,26 @@ class Scrapper():
             return self.browser.current_url
         except Exception as error1:
             self.errors = f"\nDownload link was not found\n {error1}"
-            raise Exception("Download link was not found") from None
+            raise Exception("Download link was not found") from error1
         finally:
             self.browser.close()
 
     def downloadSingleVideo(self, DownloadLink):
-        wget.download(DownloadLink, self.currentFolder +
-                      "/"+self.title+".mp4")
+        try:
+            wget.download(DownloadLink, self.currentFolder +
+                          "/"+self.title+".mp4")
+        except Exception as error:
+            raise Exception("Can not download") from error
 
     def getPlaylistVideoLinks(self, url):
         self.browser.get(url)
-        sleep(10)
+        sleep(20)
         links = self.browser.find_elements(By.CSS_SELECTOR,
                                            "a.titled-link.title[data-refer=playlists]")
+        print("\n", links, "\n")
         for link in links:
             self.videoLinks.append(link.get_attribute("href"))
+        return self.videoLinks
 
     def downloadPlaylistVideos(self, url):
         self.getPlaylistVideoLinks(url)

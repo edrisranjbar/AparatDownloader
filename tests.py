@@ -32,7 +32,6 @@ class ScrapperTest(unittest.TestCase):
     def testThatWeCanGetDownloadLinkOfASingleVideo(self):
         url = "https://www.aparat.com/v/6hSwx"
         downloadLink = self.downloader.getASingleVideoDownloadLink(url)
-        print(downloadLink)
         self.assertTrue(
             "https://" in downloadLink
         )
@@ -47,3 +46,18 @@ class ScrapperTest(unittest.TestCase):
         with self.assertRaisesRegex(Exception, "URL is invalid"):
             self.downloader.getASingleVideoDownloadLink(
                 "aparat.co/v/4Z9Zb")
+
+    def testThatWeCanDownloadAFile(self):
+        self.downloader.title = "test video"
+        dl_link = "https://aspb26.cdn.asset.aparat.com/aparat-video/56b2e43e9d89dbf760db3a1f672696e332127095-144p.mp4?wmsAuthSign=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbiI6ImI1NGJiZWQ0ZWYwNTk0NTRkODRiZmMyZjIwMTk3YmQyIiwiZXhwIjoxNjYxMzAxNTkxLCJpc3MiOiJTYWJhIElkZWEgR1NJRyJ9.jW-pu7yXyIoETHIfkqp9882noLmt8oM9OqTcIDuEiMs"
+        try:
+            self.downloader.downloadSingleVideo(
+                dl_link)
+        except Exception as errorMessage:
+            self.fail(errorMessage)
+
+    def testThatWeCanGetAllOfTheVideosLinksInAPlaylist(self):
+        # returned links list's length should be more that 0
+        count = len(self.downloader.getPlaylistVideoLinks(
+            "https://www.aparat.com/v/GojkW"))
+        self.assertGreater(count, 0)
