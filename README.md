@@ -5,7 +5,8 @@ you can choose your quality and specifiy the folder to download.
 
 
 
-[![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 ## Contributing
 we really appreciate contributing in this repo. please ask any question you have and feel free to file issues if neede.
 Please refer to each project's style and contribution guidelines for submitting patches and additions. In general, we follow the "fork-and-pull" Git workflow.
